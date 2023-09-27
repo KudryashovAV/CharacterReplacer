@@ -7,6 +7,32 @@ const insertIntoArray = (arr, index, newItem) => [
     ...arr.slice(index)
 ]
 
+const minimalDistance2 = (word1, word2) => {
+  const charsForBaseWord = word1.split("")
+  const charsForChangingWord = word2.split("")
+  const lengthDifference = charsForChangingWord.length - charsForBaseWord.length
+  const characterPosition = charsForChangingWord.length - 1
+  let attemptsCount = 0
+  let output = []
+
+  if (lengthDifference > 0) charsForBaseWord.unshift.apply(charsForBaseWord, Array(lengthDifference).fill(""))
+
+  charsForBaseWord.reverse().reduce((acc, char, index) => {
+    const currentIndex = characterPosition - index
+    if (acc[currentIndex] != char) {
+      attemptsCount += 1
+      // characterPosition - index >= 0 ? acc[currentIndex] = char : acc.unshift(char) // uncomment this line for
+                                                                                       // correct behavior with long
+                                                                                       // and short words. See tests
+      acc[currentIndex] = char // comment this file when you uncomment line 26
+      output.push(acc.join(""))
+    }
+    return acc
+  }, charsForChangingWord)
+
+  output.unshift.apply(output, [attemptsCount, word2])
+  output.forEach(line => console.log(line))
+}
 
 const minimalDistance = (word1, word2) => {
     const n = word1.length;
@@ -67,7 +93,5 @@ const minimalDistance = (word1, word2) => {
 };
 
 (() => {
-    minimalDistance(process.argv[2], process.argv[3]);
+    minimalDistance2(process.argv[2], process.argv[3]);
 })();
-
-
